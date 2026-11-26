@@ -819,7 +819,9 @@ function App(){
   const d=new Date(),now={day:(d.getDay()+6)%7,min:d.getHours()*60+d.getMinutes(),week:DATA.weekOf(d)};
   return <>{group?<Schedule key={group.id} group={group} now={now} onBack={()=>setGroup(null)} onMap={setMap}/>
     :dept?<Groups dept={dept} onPick={setGroup} onBack={()=>setDept(null)}/>:<Home onPick={setDept}/>}
-    {map&&<MapModal room={map} onClose={()=>setMap(null)}/>}
+        {map&&<MapModal room={map} onClose={()=>setMap(null)}/>}
+  </>;
+}
 DATA.weekOf=d=>{const w=Math.floor((d-new Date(d.getFullYear()>=2026&&d.getMonth()<8?d.getFullYear()-1:d.getFullYear(),8,1))/6048e5);return w%2?"den":"num"}; // TODO: бекенд має віддавати тип тижня
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script></body></html>
