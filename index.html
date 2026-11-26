@@ -822,8 +822,6 @@ function App(){
             {map&&<MapModal room={map} onClose={()=>setMap(null)}/>}
   </>;
 }
-
 DATA.weekOf=d=>{const w=Math.floor((d-new Date(d.getFullYear()>=2026&&d.getMonth()<8?d.getFullYear()-1:d.getFullYear(),8,1))/6048e5);return w%2?"den":"num"}; // TODO: бекенд має віддавати тип тижня
-
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script></body></html>
