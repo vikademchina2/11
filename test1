@@ -813,26 +813,13 @@ function MapModal({room,onClose}){
       <div className="flex gap-2"><button onClick={()=>fly(full)} className="px-3 py-1.5 rounded-lg text-sm card">Весь поверх</button><button onClick={onClose} aria-label="Закрити" className="p-2 rounded-lg card"><Icon d={I.x} c="w-5 h-5"/></button></div></div>
     <div className="flex-1 p-3 min-h-0"><div ref={host} className="mapbox h-full rounded-xl overflow-hidden" dangerouslySetInnerHTML={{__html:MAPS[key]}}/></div></div>}
 
-function TestPanel({t,setT}){
-  const [open,setOpen]=useState(true);
-  const P=[["Пн 8:45",0,"08:45"],["Вт 10:30",1,"10:30"],["Пт 11:50",4,"11:50"]];
-  return <div className="fixed right-3 bottom-3 z-40 w-64 card p-3 text-sm" style={{marginBottom:"env(safe-area-inset-bottom,0px)"}}>
-    <button onClick={()=>setOpen(!open)} className="flex items-center gap-2 font-semibold w-full"><Icon d={I.clock}/>Тестовий час{t&&<span className="ml-auto text-xs" style={{color:"var(--nw)"}}>вручну</span>}</button>
-    {open&&<div className="mt-2 grid gap-2">
-      <div className="flex gap-2"><select aria-label="День" value={t?.day??0} onChange={e=>setT({...(t||{time:"09:00",week:"num"}),day:+e.target.value})} className="flex-1 rounded-md p-1.5" style={{background:"var(--bg)",border:"1px solid var(--bd)"}}>{DAYS.map((d,i)=><option key={d} value={i}>{d}</option>)}</select>
-        <input aria-label="Час" type="time" value={t?.time??"09:00"} onChange={e=>setT({...(t||{day:0,week:"num"}),time:e.target.value})} className="flex-1 rounded-md p-1.5" style={{background:"var(--bg)",border:"1px solid var(--bd)"}}/></div>
-      <div className="flex gap-1">{[["num","Чисельник"],["den","Знаменник"]].map(([k,n])=><button key={k} onClick={()=>setT({...(t||{day:0,time:"09:00"}),week:k})} className="flex-1 py-1 rounded-md text-xs" style={(t?.week||"num")===k&&t?{background:"var(--ac)"}:{background:"var(--bg)",border:"1px solid var(--bd)"}}>{n}</button>)}</div>
-      <div className="flex gap-1 flex-wrap">{P.map(([n,d,tm])=><button key={n} onClick={()=>setT({day:d,time:tm,week:t?.week||"num"})} className="px-2 py-1 rounded-md text-xs" style={{background:"var(--bg)",border:"1px solid var(--bd)"}}>{n}</button>)}</div>
-      <button onClick={()=>setT(null)} className="text-xs underline" style={{color:"var(--mu)"}}>Реальний час</button></div>}</div>}
-
 function App(){
-  const [dept,setDept]=useState(null),[group,setGroup]=useState(null),[map,setMap]=useState(null),[test,setTest]=useState({day:0,time:"08:45",week:"num"});
+  const [dept,setDept]=useState(null),[group,setGroup]=useState(null),[map,setMap]=useState(null);
   const [tick,setTick]=useState(0);useEffect(()=>{const i=setInterval(()=>setTick(x=>x+1),30000);return()=>clearInterval(i)},[]);
-  const d=new Date(),now=test?{day:test.day,min:toMin(test.time),week:test.week}:{day:(d.getDay()+6)%7,min:d.getHours()*60+d.getMinutes(),week:DATA.weekOf(d)};
+  const d=new Date(),now={day:(d.getDay()+6)%7,min:d.getHours()*60+d.getMinutes(),week:DATA.weekOf(d)};
   return <>{group?<Schedule key={group.id} group={group} now={now} onBack={()=>setGroup(null)} onMap={setMap}/>
     :dept?<Groups dept={dept} onPick={setGroup} onBack={()=>setDept(null)}/>:<Home onPick={setDept}/>}
     {map&&<MapModal room={map} onClose={()=>setMap(null)}/>}
-    <TestPanel t={test} setT={setTest}/></>}
 DATA.weekOf=d=>{const w=Math.floor((d-new Date(d.getFullYear()>=2026&&d.getMonth()<8?d.getFullYear()-1:d.getFullYear(),8,1))/6048e5);return w%2?"den":"num"}; // TODO: бекенд має віддавати тип тижня
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script></body></html>
